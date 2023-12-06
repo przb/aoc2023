@@ -7,10 +7,9 @@ fn run_all() {
 }
 fn run_current() {
     let sum = solutions::day02::part_one();
-    let sum = solutions::day01::part_one();
-    println!("1,1: {sum}");
-    let sum = solutions::day01::part_two();
-    println!("1,2: {sum}");
+    println!("2.1: {sum}");
+    let sum = solutions::day02::part_two();
+    println!("2.2: {sum}");
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
