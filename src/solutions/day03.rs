@@ -1,12 +1,34 @@
-use itertools::Itertools;
 use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
+fn borders_symbol(input: &String, check_indexes: &Vec<usize>) -> bool {
+    let line_len = input.find('\n').unwrap() + 1;
+
+    let prev_row_indexes = check_indexes.iter().filter_map(|v| v.checked_sub(line_len));
+    let next_row_indexes = check_indexes.iter().filter_map(|v| {
+        let check_index = v + line_len;
+        if check_index > input.len() {
+            None
+        } else {
+            Some(check_index)
+        }
+    });
+
+    check_indexes
+        .iter()
+        .copied()
+        .chain(prev_row_indexes)
+        .chain(next_row_indexes)
+        .any(|index| {
+            let check_char = input.as_str().as_bytes()[index] as char;
+            !check_char.is_ascii_digit() && check_char != '.' && check_char != '\n'
+        })
+}
+
 pub(crate) fn part_one() -> i32 {
     let filename = PathBuf::from_str("inputs/03.txt").unwrap();
     let input = fs::read_to_string(filename).unwrap();
-    let line_len = input.find('\n').unwrap() + 1;
 
     let mut sum = 0;
 
@@ -30,26 +52,7 @@ pub(crate) fn part_one() -> i32 {
         check_indexes.push(i - 1);
         check_indexes.push(i);
 
-        let prev_row_indexes = check_indexes.iter().filter_map(|v| v.checked_sub(line_len));
-        let next_row_indexes = check_indexes.iter().filter_map(|v| {
-            let check_index = v + line_len;
-            if check_index > input.len() {
-                None
-            } else {
-                Some(check_index)
-            }
-        });
-        let borders_symbol = check_indexes
-            .iter()
-            .copied()
-            .chain(prev_row_indexes)
-            .chain(next_row_indexes)
-            .any(|index| {
-                let check_char = input.as_str().as_bytes()[index] as char;
-                !check_char.is_ascii_digit() && check_char != '.' && check_char != '\n'
-            });
-
-        if borders_symbol {
+        if borders_symbol(&input, &check_indexes) {
             sum += number.parse::<i32>().unwrap();
         }
         i += 1;
