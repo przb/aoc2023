@@ -6,8 +6,8 @@ fn run_all() {
     day01::time_both()
 }
 fn run_current() {
-    let sum = day01::part_two();
-    println!("calibration: {sum}");
+    let sum = solutions::day02::part_one();
+    println!("game sum: {sum}");
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
