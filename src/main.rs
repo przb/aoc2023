@@ -4,7 +4,7 @@ mod solutions;
 #[cfg(test)]
 mod test;
 
-use crate::solutions::{day01, day02};
+use crate::solutions::{day01, day02, day03};
 
 fn run_all() {
     day01::time_both();
@@ -12,10 +12,8 @@ fn run_all() {
 }
 
 fn run_current() {
-    let sum = day02::part_one();
-    println!("2.1: {sum}");
-    let sum = day02::part_two();
-    println!("2.2: {sum}");
+    let sum = day03::part_one();
+    println!("3.1: {sum}");
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
