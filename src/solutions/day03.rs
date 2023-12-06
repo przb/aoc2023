@@ -1,7 +1,7 @@
+use itertools::Itertools;
 use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
-use itertools::Itertools;
 
 pub(crate) fn part_one() -> i32 {
     let filename = PathBuf::from_str("inputs/03.txt").unwrap();
@@ -17,7 +17,7 @@ pub(crate) fn part_one() -> i32 {
         let mut check_indexes = vec![];
 
         if !char.is_ascii_digit() {
-            i+=1;
+            i += 1;
             continue;
         }
 
@@ -30,14 +30,18 @@ pub(crate) fn part_one() -> i32 {
         check_indexes.push(i - 1);
         check_indexes.push(i);
 
-        let prev_row_indexes = check_indexes.iter()
-            .filter_map(|v| v.checked_sub(line_len));
-        let next_row_indexes = check_indexes.iter()
-            .filter_map(|v| {
-                let check_index = v + line_len;
-                if check_index > input.len() { None } else { Some(check_index) }
-            });
-        let borders_symbol = check_indexes.iter().copied()
+        let prev_row_indexes = check_indexes.iter().filter_map(|v| v.checked_sub(line_len));
+        let next_row_indexes = check_indexes.iter().filter_map(|v| {
+            let check_index = v + line_len;
+            if check_index > input.len() {
+                None
+            } else {
+                Some(check_index)
+            }
+        });
+        let borders_symbol = check_indexes
+            .iter()
+            .copied()
             .chain(prev_row_indexes)
             .chain(next_row_indexes)
             .any(|index| {
@@ -48,7 +52,7 @@ pub(crate) fn part_one() -> i32 {
         if borders_symbol {
             sum += number.parse::<i32>().unwrap();
         }
-        i+=1;
+        i += 1;
     }
     sum
 }
