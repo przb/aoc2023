@@ -2,7 +2,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-fn borders_symbol(input: &String, check_indexes: &Vec<usize>) -> bool {
+fn borders_symbol(input: &String, check_indexes: &[usize]) -> bool {
     let line_len = input.find('\n').unwrap() + 1;
 
     let prev_row_indexes = check_indexes.iter().filter_map(|v| v.checked_sub(line_len));
