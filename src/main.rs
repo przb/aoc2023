@@ -1,6 +1,8 @@
 use std::error::Error;
 
 mod solutions;
+#[cfg(test)]
+mod test;
 
 use crate::solutions::{day01, day02};
 
