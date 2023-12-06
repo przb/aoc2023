@@ -61,3 +61,15 @@ pub(crate) fn part_two() -> i32 {
         .map(|(_, game)| game.iter().fold(1, |acc, (_, v)| acc * v))
         .sum()
 }
+
+pub(crate) fn time_both() {
+    let t1 = std::time::SystemTime::now();
+    let _ = part_one();
+    let t2 = std::time::SystemTime::now();
+    println!("Day 1 part 1 took {:?}", t2.duration_since(t1).unwrap());
+
+    let t1 = std::time::SystemTime::now();
+    let _ = part_two();
+    let t2 = std::time::SystemTime::now();
+    println!("Day 1 part 2 took {:?}", t2.duration_since(t1).unwrap());
+}

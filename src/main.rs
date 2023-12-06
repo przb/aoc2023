@@ -1,14 +1,18 @@
 use std::error::Error;
+
 mod solutions;
-use crate::solutions::day01;
+
+use crate::solutions::{day01, day02};
 
 fn run_all() {
-    day01::time_both()
+    day01::time_both();
+    day02::time_both()
 }
+
 fn run_current() {
-    let sum = solutions::day02::part_one();
+    let sum = day02::part_one();
     println!("2.1: {sum}");
-    let sum = solutions::day02::part_two();
+    let sum = day02::part_two();
     println!("2.2: {sum}");
 }
 
