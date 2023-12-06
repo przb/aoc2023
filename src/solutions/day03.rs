@@ -8,7 +8,8 @@ pub(crate) fn part_one() -> i32 {
     let input = fs::read_to_string(filename).unwrap();
     let line_len = input.find('\n').unwrap() + 1;
 
-    let mut parts_nums = vec![];
+    let mut sum = 0;
+
     let mut i = 0;
     while i < input.len() {
         let mut char = input.as_str().as_bytes()[i] as char;
@@ -45,13 +46,11 @@ pub(crate) fn part_one() -> i32 {
             });
 
         if borders_symbol {
-            parts_nums.push(number.parse::<i32>().unwrap());
+            sum += number.parse::<i32>().unwrap();
         }
         i+=1;
     }
-    println!("first len {}", parts_nums.len());
-    // println!("deduped len {}", parts_nums.iter().dedup().count());
-    parts_nums.iter().sum()
+    sum
 }
 
 pub(crate) fn part_two() {}
