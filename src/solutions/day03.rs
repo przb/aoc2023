@@ -109,7 +109,6 @@ fn take_both_dir_while_num(input: &String, mut index: usize) -> Option<i32> {
 }
 
 fn row_nums(input: &String, idx: usize, nums: &mut Vec<i32>) {
-    let mut offset = 0;
     let c = input.as_bytes()[idx] as char;
     if c == '.' {
         if let Some(num) = take_backward_while_num(input, idx - 1) {
@@ -118,12 +117,8 @@ fn row_nums(input: &String, idx: usize, nums: &mut Vec<i32>) {
         if let Some(num) = take_forward_while_num(input, idx + 1) {
             nums.push(num)
         }
-    } else {
-        if let Some(num) = take_both_dir_while_num(input, idx) {
-            nums.push(num)
-        };
-        // while take_forward_while_num(input, idx -1 + offset).is_none() { offset += 1 }
-        // nums.push(take_forward_while_num(input, idx -1+ offset).unwrap())
+    } else if let Some(num) = take_both_dir_while_num(input, idx) {
+        nums.push(num)
     }
 }
 
@@ -161,7 +156,9 @@ pub(crate) fn part_two() -> i32 {
     input
         .chars()
         .enumerate()
+        // get indexes of *'s
         .filter_map(|(i, c)| if c == '*' { Some(i) } else { None })
+        // get adjacent numbers for *'s
         .filter_map(|idx| {
             if adjacent_nums(&input, idx).len() == NUM_TO_MAKE_GEAR {
                 Some(adjacent_nums(&input, idx))
