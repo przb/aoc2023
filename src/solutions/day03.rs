@@ -1,11 +1,17 @@
+use itertools::Itertools;
 use std::collections::VecDeque;
 use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
-use itertools::Itertools;
+
+const NUM_TO_MAKE_GEAR: usize = 2;
+
+fn find_line_len(input: &String) -> usize {
+    input.find('\n').unwrap() + 1
+}
 
 fn borders_symbol(input: &String, check_indexes: &[usize]) -> bool {
-    let line_len = input.find('\n').unwrap() + 1;
+    let line_len = find_line_len(input);
 
     let prev_row_indexes = check_indexes.iter().filter_map(|v| v.checked_sub(line_len));
     let next_row_indexes = check_indexes.iter().filter_map(|v| {
@@ -102,60 +108,67 @@ fn take_both_dir_while_num(input: &String, mut index: usize) -> Option<i32> {
     num.parse().ok()
 }
 
-fn adjacent_nums(input: &String, index: usize) {
-    let mut nums = vec![];
-
-    let line_len = input.find('\n').unwrap() + 1;
-
-    let adj_squares = [
-        index - 1 - line_len,
-        index - line_len,
-        index + 1 - line_len,
-        index - 1,
-        index + 1,
-        index - 1 + line_len,
-        index + line_len,
-        index + 1 + line_len
-    ];
-
-    // let c = input.as_str().as_bytes()[adj_squares[0]] as char;
-
-    let adj_chars = adj_squares
-        .map(|i| input.as_str().as_bytes()[adj_squares[i]] as char);
-
-    if adj_chars[1] == '.' {
-        nums.push(take_backward_while_num(input, index - 1 - line_len));
-        nums.push(take_forward_while_num(input, index + 1 - line_len));
+fn row_nums(input: &String, idx: usize, nums: &mut Vec<i32>) {
+    let mut offset = 0;
+    let c = input.as_bytes()[idx] as char;
+    if c == '.' {
+        if let Some(num) = take_backward_while_num(input, idx - 1) {
+            nums.push(num)
+        }
+        if let Some(num) = take_forward_while_num(input, idx + 1) {
+            nums.push(num)
+        }
     } else {
-
+        if let Some(num) = take_both_dir_while_num(input, idx) {
+            nums.push(num)
+        };
+        // while take_forward_while_num(input, idx -1 + offset).is_none() { offset += 1 }
+        // nums.push(take_forward_while_num(input, idx -1+ offset).unwrap())
     }
-    if adj_chars[6] == '.' {
-        nums.push(take_backward_while_num(input, index - 1 + line_len));
-        nums.push(take_backward_while_num(input, index + 1 + line_len));
-    } else {
-
-    }
-
-    // all top are numbers AND (l is num OR r is num OR all bottom are num)
-    // OR
-    // all bottom are numbers AND (l is num OR r is num)
-    // OR
-    // left is num AND right is num AND top all . and bottom all .
-    // OR
-    // top left is num AND top middle is . AND top right is num AND all rest .
-    // OR
-    // bottom left is num AND bottom middle is . AND bottom right is num AND all rest .
-    //
 }
 
+fn adjacent_nums(input: &String, index: usize) -> Vec<i32> {
+    let mut nums = vec![];
+    let line_len = find_line_len(input);
 
-pub(crate) fn part_two() {
+    let prev_row_idx = index.checked_sub(line_len);
+    let next_row_idx = if (index + line_len) < input.len() {
+        Some(index + line_len)
+    } else {
+        None
+    };
+
+    if let Some(idx) = prev_row_idx {
+        row_nums(input, idx, &mut nums)
+    }
+    if let Some(idx) = next_row_idx {
+        row_nums(input, idx, &mut nums)
+    }
+    if let Some(num) = take_backward_while_num(input, index - 1) {
+        nums.push(num)
+    }
+    if let Some(num) = take_forward_while_num(input, index + 1) {
+        nums.push(num)
+    }
+
+    nums
+}
+
+pub(crate) fn part_two() -> i32 {
     let filename = PathBuf::from_str("inputs/03.txt").unwrap();
     let input = fs::read_to_string(filename).unwrap();
-    let mut sum = 0;
-    let mut i = 0;
 
-    while i < input.len() {
-        i += 1;
-    }
+    input
+        .chars()
+        .enumerate()
+        .filter_map(|(i, c)| if c == '*' { Some(i) } else { None })
+        .filter_map(|idx| {
+            if adjacent_nums(&input, idx).len() == NUM_TO_MAKE_GEAR {
+                Some(adjacent_nums(&input, idx))
+            } else {
+                None
+            }
+        })
+        .map(|vec| vec.iter().product::<i32>())
+        .sum()
 }
