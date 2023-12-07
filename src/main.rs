@@ -8,7 +8,8 @@ use crate::solutions::{day01, day02, day03};
 
 fn run_all() {
     day01::time_both();
-    day02::time_both()
+    day02::time_both();
+    day03::time_both();
 }
 
 fn run_current() {
