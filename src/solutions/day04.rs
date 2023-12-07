@@ -3,7 +3,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-pub(crate) fn part_one() -> i32 {
+// returns vector of cards, where 0 is winning nums, and 1 is your nums
+fn input_to_vecs() -> Vec<(Vec<i32>, Vec<i32>)> {
     let filename = PathBuf::from_str("inputs/04.txt").unwrap();
     let input = fs::read_to_string(filename).unwrap();
 
@@ -16,15 +17,23 @@ pub(crate) fn part_one() -> i32 {
                 winning_nums
                     .trim()
                     .split_ascii_whitespace()
-                    .map(|n| n.parse::<i32>().unwrap()),
+                    .map(|n| n.parse::<i32>().unwrap())
+                    .collect_vec(),
                 my_nums
                     .trim()
                     .split_ascii_whitespace()
-                    .map(|n| n.parse::<i32>().unwrap()),
+                    .map(|n| n.parse::<i32>().unwrap())
+                    .collect_vec(),
             )
         })
+        .collect_vec()
+}
+
+pub(crate) fn part_one() -> i32 {
+    input_to_vecs()
+        .iter()
         .map(|(win_nums, my_nums)| {
-            my_nums.fold(0, |acc, val| {
+            my_nums.iter().fold(0, |acc, val| {
                 if win_nums.clone().contains(&val) {
                     if acc == 0 {
                         1
@@ -40,7 +49,7 @@ pub(crate) fn part_one() -> i32 {
 }
 
 pub(crate) fn part_two() -> i32 {
-    let filename = PathBuf::from_str("inputs/03.txt").unwrap();
+    let filename = PathBuf::from_str("inputs/04.txt").unwrap();
     let input = fs::read_to_string(filename).unwrap();
 
     0
