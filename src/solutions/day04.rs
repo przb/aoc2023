@@ -34,7 +34,7 @@ pub(crate) fn part_one() -> i32 {
         .iter()
         .map(|(win_nums, my_nums)| {
             my_nums.iter().fold(0, |acc, val| {
-                if win_nums.clone().contains(&val) {
+                if win_nums.clone().contains(val) {
                     if acc == 0 {
                         1
                     } else {
@@ -49,10 +49,25 @@ pub(crate) fn part_one() -> i32 {
 }
 
 pub(crate) fn part_two() -> i32 {
-    let filename = PathBuf::from_str("inputs/04.txt").unwrap();
-    let input = fs::read_to_string(filename).unwrap();
+    let input = input_to_vecs();
 
-    0
+    let mut num_each = vec![1; input.len()];
+
+    let num_matches = input
+        .iter()
+        .map(|(win, my)| {
+            my.iter()
+                .copied()
+                .fold(0, |acc, val| if win.contains(&val) { acc + 1 } else { acc })
+        })
+        .collect_vec();
+
+    for (i, n) in num_matches.iter().enumerate() {
+        for j in 0..*n {
+            num_each[i + 1 + j] += num_each[i];
+        }
+    }
+    num_each.iter().sum()
 }
 
 pub(crate) fn time_both() {
@@ -62,7 +77,7 @@ pub(crate) fn time_both() {
     println!("Day 4 part 1 took {:?}", t2.duration_since(t1).unwrap());
 
     let t1 = std::time::SystemTime::now();
-    let _ = crate::solutions::day03::part_two();
+    let _ = part_two();
     let t2 = std::time::SystemTime::now();
     println!("Day 4 part 2 took {:?}", t2.duration_since(t1).unwrap());
 }

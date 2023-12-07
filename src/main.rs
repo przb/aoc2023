@@ -14,8 +14,8 @@ fn run_all() {
 }
 
 fn run_current() {
-    let sum = day04::part_one();
-    println!("4.1: {sum}");
+    let sum = day04::part_two();
+    println!("4.2: {sum}");
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
