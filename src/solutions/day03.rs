@@ -6,7 +6,7 @@ use std::str::FromStr;
 
 const NUM_TO_MAKE_GEAR: usize = 2;
 
-fn find_line_len(input: &String) -> usize {
+fn find_line_len(input: &str) -> usize {
     input.find('\n').unwrap() + 1
 }
 
