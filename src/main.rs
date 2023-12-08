@@ -4,17 +4,18 @@ mod solutions;
 #[cfg(test)]
 mod test;
 
-use crate::solutions::{day01, day02, day03, day04, Solution};
+use crate::solutions::{day01, day02, day03, day04, day05, Solution};
 
 fn run_all() {
     day01::Day01.time_both();
-    day02::time_both();
-    day03::time_both();
-    day04::time_both();
+    day02::Day02.time_both();
+    day03::Day03.time_both();
+    day04::Day04.time_both();
+    day05::Day05.time_both();
 }
 
 fn run_current() {
-    let sum = day04::part_two();
+    let sum = day05::Day05.part_two();
     println!("4.2: {sum}");
 }
 

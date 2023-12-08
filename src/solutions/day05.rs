@@ -1,6 +1,6 @@
 use crate::solutions::Solution;
 
-struct Day05;
+pub(crate) struct Day05;
 
 impl Solution for Day05 {
     const DAY_NUM: i32 = 5;

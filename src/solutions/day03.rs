@@ -1,3 +1,4 @@
+use crate::solutions::Solution;
 use itertools::Itertools;
 use std::collections::VecDeque;
 use std::fs;
@@ -32,39 +33,6 @@ fn borders_symbol(input: &String, check_indexes: &[usize]) -> bool {
             let check_char = input.as_str().as_bytes()[index] as char;
             !check_char.is_ascii_digit() && check_char != '.' && check_char != '\n'
         })
-}
-
-pub(crate) fn part_one() -> i32 {
-    let filename = PathBuf::from_str("inputs/03.txt").unwrap();
-    let input = fs::read_to_string(filename).unwrap();
-    let mut sum = 0;
-    let mut i = 0;
-
-    while i < input.len() {
-        let mut char = input.as_str().as_bytes()[i] as char;
-        let mut number = String::default();
-        let mut check_indexes = vec![];
-
-        if !char.is_ascii_digit() {
-            i += 1;
-            continue;
-        }
-
-        while char.is_ascii_digit() {
-            check_indexes.push(i - 1);
-            number.push(char);
-            i += 1;
-            char = input.as_str().as_bytes()[i] as char;
-        }
-        check_indexes.push(i - 1);
-        check_indexes.push(i);
-
-        if borders_symbol(&input, &check_indexes) {
-            sum += number.parse::<i32>().unwrap();
-        }
-        i += 1;
-    }
-    sum
 }
 
 fn take_forward_while_num(input: &String, mut index: usize) -> Option<i32> {
@@ -149,35 +117,61 @@ fn adjacent_nums(input: &String, index: usize) -> Vec<i32> {
     nums
 }
 
-pub(crate) fn part_two() -> i32 {
-    let filename = PathBuf::from_str("inputs/03.txt").unwrap();
-    let input = fs::read_to_string(filename).unwrap();
+pub(crate) struct Day03;
 
-    input
-        .chars()
-        .enumerate()
-        // get indexes of *'s
-        .filter_map(|(i, c)| if c == '*' { Some(i) } else { None })
-        // get adjacent numbers for *'s
-        .filter_map(|idx| {
-            if adjacent_nums(&input, idx).len() == NUM_TO_MAKE_GEAR {
-                Some(adjacent_nums(&input, idx))
-            } else {
-                None
+impl Solution for Day03 {
+    const DAY_NUM: i32 = 3;
+    type ReturnType = i32;
+    fn part_one(&self) -> i32 {
+        let filename = PathBuf::from_str("inputs/03.txt").unwrap();
+        let input = fs::read_to_string(filename).unwrap();
+        let mut sum = 0;
+        let mut i = 0;
+
+        while i < input.len() {
+            let mut char = input.as_str().as_bytes()[i] as char;
+            let mut number = String::default();
+            let mut check_indexes = vec![];
+
+            if !char.is_ascii_digit() {
+                i += 1;
+                continue;
             }
-        })
-        .map(|vec| vec.iter().product::<i32>())
-        .sum()
-}
 
-pub(crate) fn time_both() {
-    let t1 = std::time::SystemTime::now();
-    let _ = part_one();
-    let t2 = std::time::SystemTime::now();
-    println!("Day 3 part 1 took {:?}", t2.duration_since(t1).unwrap());
+            while char.is_ascii_digit() {
+                check_indexes.push(i - 1);
+                number.push(char);
+                i += 1;
+                char = input.as_str().as_bytes()[i] as char;
+            }
+            check_indexes.push(i - 1);
+            check_indexes.push(i);
 
-    let t1 = std::time::SystemTime::now();
-    let _ = part_two();
-    let t2 = std::time::SystemTime::now();
-    println!("Day 3 part 2 took {:?}", t2.duration_since(t1).unwrap());
+            if borders_symbol(&input, &check_indexes) {
+                sum += number.parse::<i32>().unwrap();
+            }
+            i += 1;
+        }
+        sum
+    }
+    fn part_two(&self) -> i32 {
+        let filename = PathBuf::from_str("inputs/03.txt").unwrap();
+        let input = fs::read_to_string(filename).unwrap();
+
+        input
+            .chars()
+            .enumerate()
+            // get indexes of *'s
+            .filter_map(|(i, c)| if c == '*' { Some(i) } else { None })
+            // get adjacent numbers for *'s
+            .filter_map(|idx| {
+                if adjacent_nums(&input, idx).len() == NUM_TO_MAKE_GEAR {
+                    Some(adjacent_nums(&input, idx))
+                } else {
+                    None
+                }
+            })
+            .map(|vec| vec.iter().product::<i32>())
+            .sum()
+    }
 }
