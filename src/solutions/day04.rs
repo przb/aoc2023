@@ -1,13 +1,9 @@
 use crate::solutions::Solution;
 use itertools::Itertools;
-use std::fs;
-use std::path::PathBuf;
-use std::str::FromStr;
 
 // returns vector tuple of cards, where 0 is winning nums, and 1 is your nums
 fn input_to_vecs() -> Vec<(Vec<i32>, Vec<i32>)> {
-    let filename = PathBuf::from_str("inputs/04.txt").unwrap();
-    let input = fs::read_to_string(filename).unwrap();
+    let input = Day04.get_input();
 
     input
         .lines()

@@ -1,7 +1,4 @@
 use crate::solutions::Solution;
-use std::fs;
-use std::path::PathBuf;
-use std::str::FromStr;
 
 const DEC_RADIX: u32 = 10;
 const BAD_NUM: u32 = 99;
@@ -39,10 +36,9 @@ impl Solution for Day01 {
     type ReturnType = u32;
 
     fn part_one(&self) -> u32 {
-        let input = PathBuf::from_str("inputs/01.txt").unwrap();
+        let input = Day01.get_input();
 
-        fs::read_to_string(input)
-            .unwrap()
+        input
             .lines()
             .map(|l| {
                 let mut digits = l.chars().filter(|c| c.is_ascii_digit());
@@ -54,10 +50,10 @@ impl Solution for Day01 {
     }
 
     fn part_two(&self) -> u32 {
-        let input = PathBuf::from_str("inputs/01.txt").unwrap();
+        let input = Day01.get_input();
 
-        let file = fs::read_to_string(input).unwrap();
-        file.lines()
+        input
+            .lines()
             .map(|line| {
                 let mut state = String::default();
                 line.chars()

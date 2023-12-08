@@ -1,9 +1,6 @@
 use crate::solutions::Solution;
 use itertools::Itertools;
 use std::collections::VecDeque;
-use std::fs;
-use std::path::PathBuf;
-use std::str::FromStr;
 
 const NUM_TO_MAKE_GEAR: usize = 2;
 
@@ -123,8 +120,7 @@ impl Solution for Day03 {
     const DAY_NUM: i32 = 3;
     type ReturnType = i32;
     fn part_one(&self) -> i32 {
-        let filename = PathBuf::from_str("inputs/03.txt").unwrap();
-        let input = fs::read_to_string(filename).unwrap();
+        let input = Day03.get_input();
         let mut sum = 0;
         let mut i = 0;
 
@@ -155,8 +151,7 @@ impl Solution for Day03 {
         sum
     }
     fn part_two(&self) -> i32 {
-        let filename = PathBuf::from_str("inputs/03.txt").unwrap();
-        let input = fs::read_to_string(filename).unwrap();
+        let input = Day03.get_input();
 
         input
             .chars()

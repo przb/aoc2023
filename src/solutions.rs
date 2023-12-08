@@ -1,3 +1,6 @@
+use std::fs;
+use std::path::PathBuf;
+
 pub(crate) mod day01;
 pub(crate) mod day02;
 pub(crate) mod day03;
@@ -9,6 +12,11 @@ pub(crate) trait Solution {
     type ReturnType;
     fn part_one(&self) -> Self::ReturnType;
     fn part_two(&self) -> Self::ReturnType;
+
+    fn get_input(&self) -> String {
+        let filename = PathBuf::from(format!("inputs/{:0>2}.txt", Self::DAY_NUM));
+        fs::read_to_string(filename).unwrap()
+    }
     fn time_both(&self) {
         let t1 = std::time::SystemTime::now();
         let _ = self.part_one();

@@ -1,9 +1,6 @@
 use crate::solutions::Solution;
 use std::cmp::max;
 use std::collections::HashMap;
-use std::fs;
-use std::path::PathBuf;
-use std::str::FromStr;
 
 fn game_maps(input: &str) -> Vec<(i32, HashMap<&str, i32>)> {
     let mut game_possibilities = vec![];
@@ -36,8 +33,7 @@ impl Solution for Day02 {
     const DAY_NUM: i32 = 2;
     type ReturnType = i32;
     fn part_one(&self) -> i32 {
-        let filename = PathBuf::from_str("inputs/02.txt").unwrap();
-        let input = fs::read_to_string(filename).unwrap();
+        let input = Day02.get_input();
         let game_possibilities = game_maps(&input);
 
         // The Elf would first like to know which games would have been possible if the bag contained:
@@ -57,8 +53,7 @@ impl Solution for Day02 {
             .sum()
     }
     fn part_two(&self) -> i32 {
-        let filename = PathBuf::from_str("inputs/02.txt").unwrap();
-        let input = fs::read_to_string(filename).unwrap();
+        let input = Day02.get_input();
         let game_possibilities = game_maps(&input);
 
         game_possibilities
