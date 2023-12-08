@@ -4,10 +4,10 @@ mod solutions;
 #[cfg(test)]
 mod test;
 
-use crate::solutions::{day01, day02, day03, day04};
+use crate::solutions::{day01, day02, day03, day04, Solution};
 
 fn run_all() {
-    day01::time_both();
+    day01::Day01.time_both();
     day02::time_both();
     day03::time_both();
     day04::time_both();
