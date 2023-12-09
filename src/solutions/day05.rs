@@ -3,7 +3,7 @@ use itertools::Itertools;
 use rayon::iter::{ParallelBridge, ParallelIterator};
 use std::str::Split;
 
-fn src_to_dst_map(src_num: u64, group: &Vec<u64>) -> Option<u64> {
+fn src_to_dst_map(src_num: u64, group: &[u64]) -> Option<u64> {
     let size = group[2];
     let src_start = group[1];
     let dst_start = group[0];
@@ -17,7 +17,7 @@ fn src_to_dst_map(src_num: u64, group: &Vec<u64>) -> Option<u64> {
     }
 }
 
-fn map_to_dst(src_num: u64, map: &Vec<Vec<u64>>) -> u64 {
+fn map_to_dst(src_num: u64, map: &[Vec<u64>]) -> u64 {
     map.iter()
         .find_map(|group| src_to_dst_map(src_num, group))
         .unwrap_or(src_num)
