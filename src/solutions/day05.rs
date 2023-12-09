@@ -1,5 +1,6 @@
 use crate::solutions::Solution;
 use itertools::Itertools;
+use rayon::iter::{ParallelBridge, ParallelIterator};
 use std::str::Split;
 
 fn src_to_dst_map(src_num: u64, group: &Vec<u64>) -> Option<u64> {
@@ -41,7 +42,7 @@ fn get_mappings(input_iter: Split<char>) -> Vec<Vec<Vec<u64>>> {
 
 fn get_smallest_location<I>(seeds: I, mappings: &Vec<Vec<Vec<u64>>>) -> u64
 where
-    I: Iterator<Item = u64>,
+    I: ParallelIterator<Item = u64>,
 {
     seeds
         .map(|seed| {
@@ -76,7 +77,7 @@ impl Solution for Day05 {
 
         let mappings = get_mappings(input_iter);
 
-        get_smallest_location(seeds, &mappings)
+        get_smallest_location(seeds.par_bridge(), &mappings)
     }
 
     fn part_two(&self) -> u64 {
@@ -99,6 +100,6 @@ impl Solution for Day05 {
 
         let mappings = get_mappings(input_iter);
 
-        get_smallest_location(seeds, &mappings)
+        get_smallest_location(seeds.par_bridge(), &mappings)
     }
 }
