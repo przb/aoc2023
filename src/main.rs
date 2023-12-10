@@ -36,6 +36,10 @@ fn run_all() {
     table.add_row(row!["5", format!("{d1:?}"), format!("{d2:?}")]);
     println!("done with day 5");
 
+    let (d1, d2) = day06::Day06.time_both();
+    table.add_row(row!["6", format!("{d1:?}"), format!("{d2:?}")]);
+    println!("done with day 6");
+
     table.printstd();
     let time_results_filename = PathBuf::from("times.csv");
     let file = File::create(time_results_filename.clone()).expect("error creating file");

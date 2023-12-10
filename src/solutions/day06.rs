@@ -45,6 +45,7 @@ fn parse_line(input: &String, line_num: usize) -> impl Iterator<Item = u64> + '_
         .filter_map(|num| num.parse().ok())
 }
 
+#[allow(dead_code)]
 fn calculate_ways(time: u64, record_distance: u64) -> u64 {
     let mut num_ways = 0;
     for speed in 1..time {
