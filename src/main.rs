@@ -57,7 +57,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     if let Some(_v) = std::env::args().nth(1) {
         run_all();
     } else {
-        run_current()
+        run_current();
     }
 
     Ok(())
