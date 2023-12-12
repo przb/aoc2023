@@ -95,7 +95,7 @@ impl From<char> for Card {
     }
 }
 
-fn hand_sorter(a: &str, b: &str) -> Ordering {
+fn part_one_cmp(a: &str, b: &str) -> Ordering {
     let a_type = HandType::from_str(a).expect("error parsing hand type");
     let b_type = HandType::from_str(b).expect("error parsing hand type");
 
@@ -156,37 +156,33 @@ fn part_two_hand(s: &str) -> Result<HandType, Error> {
     Some(t).ok_or(Error)
 }
 
+fn find_winning_sum<F>(day: &Day07, sorter: F) -> u32
+where
+    F: Fn(&str, &str) -> Ordering,
+{
+    let input = day.get_input();
+
+    input
+        .lines()
+        .map(|l| {
+            let (hand, bet) = l.split_ascii_whitespace().collect_tuple().unwrap();
+            (hand, bet.parse::<u32>().unwrap())
+        })
+        .sorted_by(|(a, _), (b, _)| sorter(a, b))
+        .enumerate()
+        .map(|(i, (_, bet))| (i + 1) as u32 * bet)
+        .sum()
+}
+
 impl Solution for Day07 {
     const DAY_NUM: i32 = 7;
     type ReturnType = u32;
 
     fn part_one(&self) -> Self::ReturnType {
-        let input = self.get_input();
-
-        input
-            .lines()
-            .map(|l| {
-                let (hand, bet) = l.split_ascii_whitespace().collect_tuple().unwrap();
-                (hand, bet.parse::<Self::ReturnType>().unwrap())
-            })
-            .sorted_by(|(a, _), (b, _)| hand_sorter(a, b))
-            .enumerate()
-            .map(|(i, (_, bet))| (i + 1) as u32 * bet)
-            .sum()
+        find_winning_sum(self, part_one_cmp)
     }
 
     fn part_two(&self) -> Self::ReturnType {
-        let input = self.get_input();
-
-        input
-            .lines()
-            .map(|l| {
-                let (hand, bet) = l.split_ascii_whitespace().collect_tuple().unwrap();
-                (hand, bet.parse::<Self::ReturnType>().unwrap())
-            })
-            .sorted_by(|(a, _), (b, _)| part_two_cmp(a, b))
-            .enumerate()
-            .map(|(i, (_, bet))| (i + 1) as u32 * bet)
-            .sum()
+        find_winning_sum(self, part_two_cmp)
     }
 }
