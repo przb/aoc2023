@@ -1,3 +1,4 @@
+use aoc2023::time_day_and_add_row;
 use prettytable::{row, Table};
 use std::error::Error;
 use std::fs::File;
@@ -7,47 +8,24 @@ mod solutions;
 #[cfg(test)]
 mod test;
 
-use crate::solutions::{day01, day02, day03, day04, day05, day06, day07, Solution};
+use crate::solutions::{day07, Solution};
 
 fn run_all() {
     let mut table = Table::new();
-
-    // Add a row per time
     table.add_row(row!["Day Num", "Part 1 Duration", "Part 2 Duration"]);
-    // A more complicated way to add a row:
-
-    let (d1, d2) = day01::Day01.time_both();
-    table.add_row(row!["1", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 1");
-
-    let (d1, d2) = day02::Day02.time_both();
-    table.add_row(row!["2", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 2");
-
-    let (d1, d2) = day03::Day03.time_both();
-    table.add_row(row!["3", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 3");
-
-    let (d1, d2) = day04::Day04.time_both();
-    table.add_row(row!["4", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 4");
-
-    let (d1, d2) = day05::Day05.time_both();
-    table.add_row(row!["5", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 5");
-
-    let (d1, d2) = day06::Day06.time_both();
-    table.add_row(row!["6", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 6");
-
-    let (d1, d2) = day07::Day07.time_both();
-    table.add_row(row!["7", format!("{d1:?}"), format!("{d2:?}")]);
-    println!("done with day 7");
+    time_day_and_add_row!(01);
+    time_day_and_add_row!(02);
+    time_day_and_add_row!(03);
+    time_day_and_add_row!(04);
+    // make_table_row!(05);
+    time_day_and_add_row!(06);
+    time_day_and_add_row!(07);
 
     table.printstd();
+
+    // save to file else print error
     let time_results_filename = PathBuf::from("times.csv");
     let file = File::create(time_results_filename.clone()).expect("error creating file");
-
     match table.to_csv(file) {
         Ok(_) => println!("saved results to {:?}", time_results_filename),
         Err(_) => println!("error saving csv"),
