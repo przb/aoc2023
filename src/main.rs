@@ -40,6 +40,10 @@ fn run_all() {
     table.add_row(row!["6", format!("{d1:?}"), format!("{d2:?}")]);
     println!("done with day 6");
 
+    let (d1, d2) = day07::Day07.time_both();
+    table.add_row(row!["7", format!("{d1:?}"), format!("{d2:?}")]);
+    println!("done with day 7");
+
     table.printstd();
     let time_results_filename = PathBuf::from("times.csv");
     let file = File::create(time_results_filename.clone()).expect("error creating file");
@@ -55,7 +59,7 @@ fn run_current() {
     println!("7.1: {sum}");
     let sum = day07::Day07.part_two();
     println!("7.2: {sum}");
-    day06::Day06.print_time();
+    day07::Day07.print_time();
 }
 
 fn main() -> Result<(), Box<dyn Error>> {

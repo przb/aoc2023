@@ -111,6 +111,51 @@ fn hand_sorter(a: &str, b: &str) -> Ordering {
     }
 }
 
+fn part_two_cmp(a: &str, b: &str) -> Ordering {
+    let a_type = part_two_hand(a).expect("error parsing hand type");
+    let b_type = part_two_hand(b).expect("error parsing hand type");
+
+    if a_type == b_type {
+        // compare strings
+        let (a_char, b_char) = a.chars().zip(b.chars()).find(|(a, b)| a != b).unwrap();
+        let a = Card::from(a_char);
+        let b = Card::from(b_char);
+
+        if b == Card::CardJ {
+            Ordering::Greater
+        } else if a == Card::CardJ {
+            Ordering::Less
+        } else {
+            b.cmp(&a)
+        }
+    } else {
+        b_type.cmp(&a_type)
+    }
+}
+
+fn part_two_hand(s: &str) -> Result<HandType, Error> {
+    let t = HandType::from_str(s).expect("Error parsing hand");
+
+    let t = if !s.contains('J') {
+        t
+    } else {
+        match t {
+            FiveKind | FourKind | FullHouse => FiveKind,
+            ThreeKind => FourKind,
+            TwoPair => {
+                if s.chars().filter(|c| *c == 'J').count() == 1 {
+                    FullHouse
+                } else {
+                    FourKind
+                }
+            }
+            OnePair => ThreeKind,
+            HighCard => OnePair,
+        }
+    };
+    Some(t).ok_or(Error)
+}
+
 impl Solution for Day07 {
     const DAY_NUM: i32 = 7;
     type ReturnType = u32;
@@ -131,6 +176,17 @@ impl Solution for Day07 {
     }
 
     fn part_two(&self) -> Self::ReturnType {
-        3
+        let input = self.get_input();
+
+        input
+            .lines()
+            .map(|l| {
+                let (hand, bet) = l.split_ascii_whitespace().collect_tuple().unwrap();
+                (hand, bet.parse::<Self::ReturnType>().unwrap())
+            })
+            .sorted_by(|(a, _), (b, _)| part_two_cmp(a, b))
+            .enumerate()
+            .map(|(i, (_, bet))| (i + 1) as u32 * bet)
+            .sum()
     }
 }
