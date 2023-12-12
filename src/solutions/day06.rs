@@ -36,7 +36,7 @@ impl Solution for Day06 {
     }
 }
 
-fn parse_line(input: &String, line_num: usize) -> impl Iterator<Item = u64> + '_ {
+fn parse_line(input: &str, line_num: usize) -> impl Iterator<Item = u64> + '_ {
     input
         .lines()
         .nth(line_num)
