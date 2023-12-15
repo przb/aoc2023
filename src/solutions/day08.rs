@@ -1,29 +1,40 @@
 use crate::solutions::Solution;
 use std::collections::{HashMap};
-use std::fmt::{Display};
 
 
 pub(crate) struct Day08;
+
+fn get_parent(line: &str) -> &str {
+    let (parent, _) = line.split_once('=').unwrap();
+    parent.trim()
+
+}
+
+fn get_children(line: &str) -> (&str, &str) {
+    let (_, children) = line.split_once('=').unwrap();
+
+    let children = children
+        .trim()
+        .strip_prefix('(')
+        .expect("no '(' found")
+        .strip_suffix(')')
+        .expect("no ')' found")
+        .split_once(',')
+        .expect("no ',' found");
+
+    (children.0.trim(), children.1.trim())
+}
 
 fn create_mapping<'a, I: Iterator<Item=&'a str>>(input_lines: I) -> (HashMap<&'a str, (&'a str, &'a str)>, Vec<&'a str>) {
     let mut mappings = HashMap::new();
     let mut startings = vec![];
     input_lines.filter(|l| !l.is_empty())
         .for_each(|line| {
-            let (parent, children) = line.split_once('=').unwrap();
-            let parent = parent.trim();
+            let parent = get_parent(line);
             if parent.ends_with('A') {
                 startings.push(parent);
             }
-            let children = children
-                .trim()
-                .strip_prefix('(')
-                .expect("no '(' found")
-                .strip_suffix(')')
-                .expect("no ')' found")
-                .split_once(',')
-                .expect("no ',' found");
-            let children = (children.0.trim(), children.1.trim());
+            let children = get_children(line);
             mappings.insert(parent, children);
         });
 
