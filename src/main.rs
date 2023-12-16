@@ -21,6 +21,7 @@ fn run_all() {
     time_day_and_add_row!(06);
     time_day_and_add_row!(07);
     time_day_and_add_row!(08);
+    time_day_and_add_row!(09);
 
     table.printstd();
 

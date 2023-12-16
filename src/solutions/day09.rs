@@ -11,14 +11,22 @@ fn get_iters(input: &str) -> impl DoubleEndedIterator<Item=impl DoubleEndedItera
     })
 }
 
-
-fn collapse_iters(row: &[i32]) -> i32 {
+fn next_history(row: &[i32]) -> i32 {
     let last = *row.last().unwrap();
     let collapsed_row = row.iter().tuple_windows().map(|(l, r)| r - l).collect_vec();
     if collapsed_row.iter().any(|i| *i != 0) {
-        last + collapse_iters(&collapsed_row)
+        last + next_history(&collapsed_row)
     } else {
         last
+    }
+}
+fn prev_history(row: &[i32]) -> i32 {
+    let first = *row.first().unwrap();
+    let collapsed_row = row.iter().tuple_windows().map(|(l, r)| r - l).collect_vec();
+    if collapsed_row.iter().any(|i| *i != 0) {
+        first - prev_history(&collapsed_row)
+    } else {
+        first
     }
 }
 
@@ -29,11 +37,14 @@ impl Solution for Day09 {
     fn part_one(&self) -> Self::ReturnType {
         let input = self.get_input();
         get_iters(&input)
-            .map(|row| collapse_iters(&row.collect_vec()))
+            .map(|row| next_history(&row.collect_vec()))
             .sum()
     }
 
     fn part_two(&self) -> Self::ReturnType {
-        3
+        let input = self.get_input();
+        get_iters(&input)
+            .map(|row| prev_history(&row.collect_vec()))
+            .sum()
     }
 }
