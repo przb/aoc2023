@@ -1,10 +1,12 @@
 pub(crate) struct Day09;
 
+use crate::solutions::Solution;
 use itertools::Itertools;
 use rayon::prelude::*;
-use crate::solutions::Solution;
 
-fn get_iters(input: &str) -> impl DoubleEndedIterator<Item=impl DoubleEndedIterator<Item=i32> + '_> + '_ {
+fn get_iters(
+    input: &str,
+) -> impl DoubleEndedIterator<Item = impl DoubleEndedIterator<Item = i32> + '_> + '_ {
     let lines = input.lines();
     lines.map(|l| {
         l.split_ascii_whitespace()

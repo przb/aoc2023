@@ -94,11 +94,7 @@ impl Solution for Day08 {
         let (mappings, nodes) = create_mapping(lines);
         let counts = nodes
             .iter()
-            .map(|n| {
-                find_steps(navigation_seq, &mut [*n], &mappings, |n| {
-                    n.ends_with('Z')
-                })
-            })
+            .map(|n| find_steps(navigation_seq, &mut [*n], &mappings, |n| n.ends_with('Z')))
             .collect_vec();
         counts.iter().fold(1, |acc, r| lcm(acc, *r as u64))
     }
