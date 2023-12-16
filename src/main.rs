@@ -20,6 +20,7 @@ fn run_all() {
     // make_table_row!(05);
     time_day_and_add_row!(06);
     time_day_and_add_row!(07);
+    time_day_and_add_row!(08);
 
     table.printstd();
 
@@ -35,9 +36,8 @@ fn run_all() {
 fn run_current() {
     let sum = day08::Day08.part_one();
     println!("8.1: {sum}");
-    // let sum = day07::Day07.part_two();
-    // println!("7.2: {sum}");
-    // day07::Day07.print_time();
+    let sum = day08::Day08.part_two();
+    println!("8.2: {sum}");
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
