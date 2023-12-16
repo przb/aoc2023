@@ -43,7 +43,7 @@ fn create_mapping<'a, I: Iterator<Item = &'a str>>(
 }
 
 fn update_current_nodes<'a>(
-    nodes: &mut Vec<&'a str>,
+    nodes: &mut [&'a str],
     mappings: &HashMap<&'a str, (&'a str, &'a str)>,
     direction: char,
 ) {
@@ -58,14 +58,14 @@ fn update_current_nodes<'a>(
 
 fn find_steps<'a, F: FnMut(&&str) -> bool>(
     navigation_seq: &str,
-    current: &mut Vec<&'a str>,
+    current: &mut [&'a str],
     mappings: &HashMap<&'a str, (&'a str, &'a str)>,
     mut end_cond: F,
 ) -> u32 {
     let mut directions = navigation_seq.chars().cycle();
     let mut steps = 0;
     while current.iter().any(|n| !end_cond(n)) {
-        update_current_nodes(current, &mappings, directions.next().unwrap());
+        update_current_nodes(current, mappings, directions.next().unwrap());
         steps += 1;
     }
 
@@ -95,7 +95,7 @@ impl Solution for Day08 {
         let counts = nodes
             .iter()
             .map(|n| {
-                find_steps(navigation_seq, &mut vec![*n], &mappings, |n| {
+                find_steps(navigation_seq, &mut [*n], &mappings, |n| {
                     n.ends_with('Z')
                 })
             })
