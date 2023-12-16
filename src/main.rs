@@ -17,7 +17,7 @@ fn run_all() {
     time_day_and_add_row!(02);
     time_day_and_add_row!(03);
     time_day_and_add_row!(04);
-    // make_table_row!(05);
+    time_day_and_add_row!(05);
     time_day_and_add_row!(06);
     time_day_and_add_row!(07);
     time_day_and_add_row!(08);
