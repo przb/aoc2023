@@ -1,19 +1,17 @@
-use crate::solutions::day03;
-
 fn is_newline(s: &String, idx: usize) -> bool {
-    s.as_bytes()[idx] == '\n' as u8
+    s.as_bytes()[idx] == b'\n'
 }
 
 fn is_in_bounds(s: &String, idx: usize) -> bool {
     idx < s.len()
 }
 
+#[allow(unused)]
 pub fn find_line_len(input: &str) -> usize {
     input.find('\n').unwrap() + 1
 }
 
-fn row(input: &String, index: usize) {}
-
+#[allow(dead_code)]
 /// Returns a vector of valid indexes over the string. Valid indexes are non newline characters within the string
 pub fn adjacent_indexes(input: &String, index: usize, include_diagonals: bool) -> Vec<usize> {
     let mut indexes = vec![];
@@ -44,7 +42,6 @@ pub fn adjacent_indexes(input: &String, index: usize, include_diagonals: bool) -
 }
 
 mod test {
-    use crate::solutions::string_grid::adjacent_indexes;
 
     #[test]
     fn simple_grid() {

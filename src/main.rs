@@ -8,7 +8,7 @@ mod solutions;
 #[cfg(test)]
 mod test;
 
-use crate::solutions::{day09, day10, Solution};
+use crate::solutions::{day10, Solution};
 
 fn run_all() {
     let mut table = Table::new();
