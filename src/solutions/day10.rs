@@ -62,6 +62,89 @@ impl Solution for Day10 {
     }
 
     fn part_two(&self) -> Self::ReturnType {
-        0
+        let input = self.get_input();
+        let starting_index = input.find('S').unwrap();
+        let mut path = HashMap::new();
+        mark_path(&input, starting_index, &mut path);
+        let line_len = find_line_len(&input);
+
+        // So i know what the main path is
+        // Now i need to count all the squares that are contained in the path
+        // To do this, i will use a ray casting algorithm on each line in the string
+        // something like (pseudocode):
+
+        // num inside <- 0
+        //
+        // for each line l
+        //      num intersections <- 0
+        //      for each char c
+        //          if the char c is contained in the path,
+        //              if the line is just tangent, do not increment the number of intersections
+        //              if the c ends by going up or down (such as a '|', 'J', or '7', increment the num intersections
+        //              if the c ends by going left or right ('-', 'F', or 'L'), dont increment the number of intersections until the end (ie the same conditions as above)
+        //              if the c is '.' dont increment the number of intersections
+        //              todo figure out how to handle the starting point S
+        //          else if the char is not contained in the path,
+        //          if the current num intersections is even, then do not increment the number of points inside the shape
+        //          if the current num intersections is od, then increment the number of points inside the shape
+
+        let mut num_intersections = 0;
+        let mut num_inside = 0;
+        let mut could_be_tangent = false;
+        let mut char_to_make_tangent = '0'; // just some random char for now
+        for (i, c) in input.chars().enumerate() {
+            // the char c is contained in the path
+            if path.contains_key(&i) {
+                match c {
+                    // in my specific puzzle, the S acts as an F
+                    'F' | 'S' => {
+                        could_be_tangent = true;
+                        char_to_make_tangent = '7';
+                    },
+                    'L' => {
+                        could_be_tangent = true;
+                        char_to_make_tangent = 'J';
+                    },
+                    '|' => {
+                        num_intersections += 1;
+                        could_be_tangent = false;
+                    },
+                    'J' => {
+                        if could_be_tangent && char_to_make_tangent == c {
+                            num_intersections += 0;
+                        } else {
+                            num_intersections += 1;
+                        }
+                        could_be_tangent = false;
+                    },
+                    '7' => {
+                        if could_be_tangent && char_to_make_tangent == c {
+                            num_intersections += 0;
+                        } else {
+                            num_intersections += 1;
+                        }
+                        could_be_tangent = false;
+                    },
+                    _ => {}
+                }
+            } else if c == '\n' {
+                // reset
+                num_intersections = 0;
+                could_be_tangent = false;
+            }
+            // the char is not contained in the path
+            else {
+                if num_intersections % 2 == 1 {
+                    // point is inside the shape
+                    num_inside += 1;
+                }
+                // else {
+                //     // point is not inside
+                //     num_inside += 0
+                // }
+            }
+        }
+
+        num_inside
     }
 }
