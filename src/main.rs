@@ -8,7 +8,7 @@ mod solutions;
 #[cfg(test)]
 mod test;
 
-use crate::solutions::{day10, Solution};
+use crate::solutions::{day10, day11, Solution};
 
 fn run_all() {
     let mut table = Table::new();
@@ -35,11 +35,11 @@ fn run_all() {
 }
 
 fn run_current() {
-    let sum = day10::Day10.part_one();
-    println!("10.1: {sum}");
-    let sum = day10::Day10.part_two();
-    println!("10.2: {sum}");
-    let (d1, d2) = day10::Day10.time_both();
+    let sum = day11::Day11.part_one();
+    println!("11.1: {sum}");
+    let sum = day11::Day11.part_two();
+    println!("11.2: {sum}");
+    let (d1, d2) = day11::Day11.time_both();
     println!("d1: {d1:?}, d2: {d2:?}");
 }
 
