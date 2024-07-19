@@ -66,7 +66,7 @@ impl Solution for Day10 {
         let starting_index = input.find('S').unwrap();
         let mut path = HashMap::new();
         mark_path(&input, starting_index, &mut path);
-        let line_len = find_line_len(&input);
+        let _line_len = find_line_len(&input);
 
         // So i know what the main path is
         // Now i need to count all the squares that are contained in the path
