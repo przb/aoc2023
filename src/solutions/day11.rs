@@ -1,3 +1,4 @@
+use std::cmp::{max, min};
 use crate::solutions::Solution;
 use itertools::Itertools;
 
@@ -49,8 +50,8 @@ fn get_manhattan_distance(
     let xj = (j % line_len) as i32;
     let yj = (j / line_len) as i32;
 
-    let x_r = (xi+1)..xj;
-    let y_r = (yi+1)..yj;
+    let x_r = min(xi, xj)..max(xi, xj);
+    let y_r = min(yi, yj)..max(yi, yj);
 
     let mut dist = i32::abs(xi - xj);
     dist += i32::abs(yi - yj);
@@ -72,17 +73,17 @@ impl Solution for Day11 {
 
     fn part_one(&self) -> Self::ReturnType {
         let input = self.get_input();
-        let input = "...#......
-.......#..
-#.........
-..........
-......#...
-.#........
-.........#
-..........
-.......#..
-#...#....."
-            .to_string();
+//         let input = "...#......
+// .......#..
+// #.........
+// ..........
+// ......#...
+// .#........
+// .........#
+// ..........
+// .......#..
+// #...#....."
+//             .to_string();
 
         let line_len = input.find('\n').unwrap();
         let galaxies = get_galaxy_locs(&input);
