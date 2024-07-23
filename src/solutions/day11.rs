@@ -1,6 +1,6 @@
-use std::cmp::{max, min};
 use crate::solutions::Solution;
 use itertools::Itertools;
+use std::cmp::{max, min};
 
 pub(crate) struct Day11;
 
@@ -8,8 +8,6 @@ struct Galaxy {
     // starting at zero from the top left
     x: i32,
     y: i32,
-    index: usize,
-    num: usize,
 }
 
 fn get_expanded_rows(input: &String) -> Vec<usize> {
@@ -43,12 +41,10 @@ fn get_galaxies(input: &String, line_len: usize) -> Vec<Galaxy> {
         .filter(|c| *c != '\n') // filter out the new line chars
         // this enumerate counts the position of the galaxy in the string (excluding newlines)
         .enumerate()
-        .filter(|(_, c)|*c == '#') // only include the galaxy chars
+        .filter(|(_, c)| *c == '#') // only include the galaxy chars
         // this enumerate counts the number of galaxies
         .enumerate()
-        .map(|(num, (index, c))| Galaxy {
-            num,
-            index,
+        .map(|(_num, (index, _c))| Galaxy {
             x: (index % line_len) as i32,
             y: (index / line_len) as i32,
         })
@@ -60,42 +56,30 @@ fn get_manhattan_distance(
     j: &Galaxy,
     expanded_rows: &[usize],
     expanded_cols: &[usize],
-) -> i32 {
+    expansion_factor: i64,
+) -> i64 {
     let x_r = min(i.x, j.x)..max(i.x, j.x);
     let y_r = min(i.y, j.y)..max(i.y, j.y);
 
-    let mut dist = i32::abs(i.x - j.x);
-    dist += i32::abs(i.y - j.y);
-    dist += expanded_rows
+    let mut dist = i64::abs((i.x - j.x) as i64);
+    dist += i64::abs((i.y - j.y) as i64);
+    let rows = expanded_rows
         .iter()
         .filter(|row| y_r.contains(&(**row as i32)))
-        .count() as i32;
-    dist += expanded_cols
+        .count() as i64;
+    let cols = expanded_cols
         .iter()
         .filter(|col| x_r.contains(&(**col as i32)))
-        .count() as i32;
-    // println!("dist: {dist}");
-    dist
+        .count() as i64;
+    dist + (rows + cols) * (expansion_factor - 1)
 }
 
 impl Solution for Day11 {
     const DAY_NUM: i32 = 11;
-    type ReturnType = i32;
+    type ReturnType = i64;
 
     fn part_one(&self) -> Self::ReturnType {
         let input = self.get_input();
-//        let input = "...#......
-//.......#..
-//#.........
-//..........
-//......#...
-//.#........
-//.........#
-//..........
-//.......#..
-//#...#....."
-//            .to_string();
-
 
         let line_len = input.find('\n').unwrap();
         let galaxies = get_galaxies(&input, line_len);
@@ -105,11 +89,22 @@ impl Solution for Day11 {
         galaxies
             .iter()
             .tuple_combinations()
-            .map(|(i, j)| get_manhattan_distance(i, j, &expanded_rows, &expanded_cols))
+            .map(|(i, j)| get_manhattan_distance(i, j, &expanded_rows, &expanded_cols, 2))
             .sum()
     }
 
     fn part_two(&self) -> Self::ReturnType {
-        0
+        let input = self.get_input();
+
+        let line_len = input.find('\n').unwrap();
+        let galaxies = get_galaxies(&input, line_len);
+        let expanded_rows = get_expanded_rows(&input);
+        let expanded_cols = get_expanded_cols(&input);
+
+        galaxies
+            .iter()
+            .tuple_combinations()
+            .map(|(i, j)| get_manhattan_distance(i, j, &expanded_rows, &expanded_cols, 1_000_000))
+            .sum()
     }
 }
