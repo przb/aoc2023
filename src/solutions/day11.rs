@@ -1,6 +1,8 @@
 use crate::solutions::Solution;
+use arrayvec::ArrayVec;
 use itertools::Itertools;
 use std::cmp::{max, min};
+use std::slice::Iter;
 
 pub(crate) struct Day11;
 
@@ -10,7 +12,7 @@ struct Galaxy {
     y: i32,
 }
 
-fn get_expanded_rows(input: &String) -> Vec<usize> {
+fn get_expanded_rows(input: &String) -> ArrayVec<usize, 20> {
     input
         .lines()
         .enumerate()
@@ -18,7 +20,7 @@ fn get_expanded_rows(input: &String) -> Vec<usize> {
         .collect()
 }
 
-fn get_expanded_cols(input: &String) -> Vec<usize> {
+fn get_expanded_cols(input: &String) -> ArrayVec<usize, 20> {
     let line_len = input.find('\n').unwrap();
     input
         .chars()
@@ -35,7 +37,7 @@ fn get_expanded_cols(input: &String) -> Vec<usize> {
         .collect()
 }
 
-fn get_galaxies(input: &String, line_len: usize) -> Vec<Galaxy> {
+fn get_galaxies(input: &String, line_len: usize) -> ArrayVec<Galaxy, 1000> {
     input
         .chars()
         .filter(|c| *c != '\n') // filter out the new line chars
@@ -54,8 +56,8 @@ fn get_galaxies(input: &String, line_len: usize) -> Vec<Galaxy> {
 fn get_manhattan_distance(
     i: &Galaxy,
     j: &Galaxy,
-    expanded_rows: &[usize],
-    expanded_cols: &[usize],
+    expanded_rows: Iter<usize>,
+    expanded_cols: Iter<usize>,
     expansion_factor: i64,
 ) -> i64 {
     let x_r = min(i.x, j.x)..max(i.x, j.x);
@@ -64,11 +66,9 @@ fn get_manhattan_distance(
     let mut dist = i64::abs((i.x - j.x) as i64);
     dist += i64::abs((i.y - j.y) as i64);
     let rows = expanded_rows
-        .iter()
         .filter(|row| y_r.contains(&(**row as i32)))
         .count() as i64;
     let cols = expanded_cols
-        .iter()
         .filter(|col| x_r.contains(&(**col as i32)))
         .count() as i64;
     dist + (rows + cols) * (expansion_factor - 1)
@@ -89,7 +89,9 @@ impl Solution for Day11 {
         galaxies
             .iter()
             .tuple_combinations()
-            .map(|(i, j)| get_manhattan_distance(i, j, &expanded_rows, &expanded_cols, 2))
+            .map(|(i, j)| {
+                get_manhattan_distance(i, j, expanded_rows.iter(), expanded_cols.iter(), 2)
+            })
             .sum()
     }
 
@@ -104,7 +106,9 @@ impl Solution for Day11 {
         galaxies
             .iter()
             .tuple_combinations()
-            .map(|(i, j)| get_manhattan_distance(i, j, &expanded_rows, &expanded_cols, 1_000_000))
+            .map(|(i, j)| {
+                get_manhattan_distance(i, j, expanded_rows.iter(), expanded_cols.iter(), 1_000_000)
+            })
             .sum()
     }
 }
