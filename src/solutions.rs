@@ -12,8 +12,8 @@ pub(crate) mod day07;
 pub(crate) mod day08;
 pub(crate) mod day09;
 pub(crate) mod day10;
-pub(crate) mod string_grid;
 pub(crate) mod day11;
+pub(crate) mod string_grid;
 
 pub(crate) trait Solution {
     const DAY_NUM: i32;
