@@ -100,15 +100,15 @@ impl Solution for Day10 {
                     'F' | 'S' => {
                         could_be_tangent = true;
                         char_to_make_tangent = '7';
-                    },
+                    }
                     'L' => {
                         could_be_tangent = true;
                         char_to_make_tangent = 'J';
-                    },
+                    }
                     '|' => {
                         num_intersections += 1;
                         could_be_tangent = false;
-                    },
+                    }
                     'J' => {
                         if could_be_tangent && char_to_make_tangent == c {
                             num_intersections += 0;
@@ -116,7 +116,7 @@ impl Solution for Day10 {
                             num_intersections += 1;
                         }
                         could_be_tangent = false;
-                    },
+                    }
                     '7' => {
                         if could_be_tangent && char_to_make_tangent == c {
                             num_intersections += 0;
@@ -124,7 +124,7 @@ impl Solution for Day10 {
                             num_intersections += 1;
                         }
                         could_be_tangent = false;
-                    },
+                    }
                     _ => {}
                 }
             } else if c == '\n' {
