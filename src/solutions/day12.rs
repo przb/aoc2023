@@ -48,14 +48,8 @@ fn line_matches_counts(status_line: &str, broken_counts: &Vec<i32>) -> bool {
 fn calculate_combos<'a>(
     status_line: &'a str,
     broken_counts: &Vec<i32>,
-    map: &mut HashMap<Box<str>, i32>,
 ) -> i32 {
     let first = status_line;
-    let val = map.get(first);
-    if val.is_some() {
-        println!("FOUND IN MAP");
-        return *val.unwrap();
-    }
 
     // if there are any unknowns
     if first.chars().any(|c| c == UNKNOWN_CHAR) {
@@ -66,16 +60,14 @@ fn calculate_combos<'a>(
             unknown_index..(unknown_index + 1),
             &OPERATIONAL_CHAR.to_string(),
         );
-        let mut count = calculate_combos(line.borrow(), broken_counts, map);
+        let mut count = calculate_combos(line.borrow(), broken_counts);
 
         line.replace_range(unknown_index..(unknown_index + 1), &BROKEN_CHAR.to_string());
-        count += calculate_combos(&line, broken_counts, map);
+        count += calculate_combos(&line, broken_counts);
 
-        map.insert(line.into(), count);
         count
     } else if line_matches_counts(first, broken_counts) {
         // otherwise there are no unknowns, so lets just check if its valid
-        map.insert(first.into(), 1);
         1
     } else {
         // otherwise its not valid
@@ -102,7 +94,7 @@ impl Solution for Day12 {
             .map(|l| {
                 let (springs, counts) = l.split_once(' ').unwrap();
                 let counts: Vec<i32> = counts.split(',').map(|c| c.parse().unwrap()).collect();
-                calculate_combos(springs, &counts, &mut HashMap::new())
+                calculate_combos(springs, &counts)
             })
             .sum()
     }
