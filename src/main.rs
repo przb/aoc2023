@@ -41,8 +41,8 @@ fn run_current() {
     println!("12.1: {sum}");
     let sum = day12::Day12.part_two();
     println!("12.2: {sum}");
-    let (d1, d2) = day12::Day12.time_both();
-    println!("d1: {d1:?}, d2: {d2:?}");
+    //let (d1, d2) = day12::Day12.time_both();
+    //println!("d1: {d1:?}, d2: {d2:?}");
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
