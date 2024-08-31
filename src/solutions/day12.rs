@@ -1,6 +1,8 @@
 use crate::solutions::day12::SpringStatus::{Broken, Operational, Unknown};
 use crate::solutions::Solution;
 use itertools::Itertools;
+use rayon::iter::ParallelIterator;
+use rayon::str::ParallelString;
 use std::borrow::Borrow;
 use std::collections::HashMap;
 
@@ -96,9 +98,8 @@ impl Solution for Day12 {
         //            .to_string();
         //
         input
-            .lines()
-            .enumerate()
-            .map(|(_c, l)| {
+            .par_lines()
+            .map(|l| {
                 let (springs, counts) = l.split_once(' ').unwrap();
                 let counts: Vec<i32> = counts.split(',').map(|c| c.parse().unwrap()).collect();
                 calculate_combos(springs, &counts, &mut HashMap::new())
