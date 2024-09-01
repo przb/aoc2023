@@ -4,7 +4,6 @@ use itertools::Itertools;
 use rayon::iter::ParallelIterator;
 use rayon::str::ParallelString;
 use std::borrow::Borrow;
-use std::collections::HashMap;
 
 pub(crate) struct Day12;
 
@@ -45,10 +44,7 @@ fn line_matches_counts(status_line: &str, broken_counts: &Vec<i32>) -> bool {
             .all(|((count, _character), broken_count)| *broken_count as usize == count)
 }
 
-fn calculate_combos<'a>(
-    status_line: &'a str,
-    broken_counts: &Vec<i32>,
-) -> i32 {
+fn calculate_combos<'a>(status_line: &'a str, broken_counts: &Vec<i32>) -> i32 {
     let first = status_line;
 
     // if there are any unknowns
@@ -94,12 +90,46 @@ impl Solution for Day12 {
             .map(|l| {
                 let (springs, counts) = l.split_once(' ').unwrap();
                 let counts: Vec<i32> = counts.split(',').map(|c| c.parse().unwrap()).collect();
+
                 calculate_combos(springs, &counts)
             })
             .sum()
     }
 
     fn part_two(&self) -> Self::ReturnType {
-        0
+        let input = self.get_input();
+        //        let input = "???.### 1,1,3
+        //.??..??...?##. 1,1,3
+        //?#?#?#?#?#?#?#? 1,3,1,6
+        //????.#...#... 4,1,1
+        //????.######..#####. 1,6,5
+        //?###???????? 3,2,1"
+        //            .to_string();
+        //
+        input
+            .par_lines()
+            .map(|l| {
+                let (springs, counts) = l.split_once(' ').unwrap();
+                let counts = counts.split(',').map(|c| c.parse().unwrap());
+
+                let counts = counts
+                    .clone()
+                    .chain(counts.clone())
+                    .chain(counts.clone())
+                    .chain(counts.clone())
+                    .chain(counts.clone())
+                    .collect();
+
+                let springs: String = springs
+                    .chars()
+                    .chain(springs.chars())
+                    .chain(springs.chars())
+                    .chain(springs.chars())
+                    .chain(springs.chars())
+                    .collect();
+
+                calculate_combos(&springs, &counts)
+            })
+            .sum()
     }
 }
