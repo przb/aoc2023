@@ -71,65 +71,64 @@ fn calculate_combos<'a>(status_line: &'a str, broken_counts: &Vec<i32>) -> i32 {
     }
 }
 
+fn divide_and_conquerer(line: &str, index: usize, broken_counts: &Vec<i32>) -> i32 {
+    // base case :
+    // "." returns 0
+    // "#" returns 1
+    //
+    // recurisve cases:
+    // if the new char is "."
+    //      return the count of the rest of the string
+    // if the new char is "#"
+    //      if the second char is "."
+    //          // there is a new group
+    //          return 1 + the rest of the string
+    //      if the second char is "#"
+    //          return the rest of the string
+
+    if index == line.len() - 1 {
+        let current_char = line.as_bytes()[index];
+        if current_char == OPERATIONAL_CHAR as u8 {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    let current_char = line.as_bytes()[index];
+    if current_char == OPERATIONAL_CHAR as u8 {
+        return divide_and_conquerer(line, index + 1, broken_counts);
+    } else if current_char == BROKEN_CHAR as u8 {
+        let second_char = line.as_bytes()[index + 1];
+        if second_char == OPERATIONAL_CHAR as u8 {
+            return 1 + divide_and_conquerer(line, index + 1, broken_counts);
+        } else if second_char == BROKEN_CHAR as u8 {
+            return divide_and_conquerer(line, index + 1, broken_counts);
+        } else {
+            println!("error");
+            return 0;
+        }
+    } else {
+        return 0;
+    }
+}
+
 impl Solution for Day12 {
     const DAY_NUM: i32 = 12;
     type ReturnType = i32;
 
     fn part_one(&self) -> Self::ReturnType {
         let input = self.get_input();
-        //        let input = "???.### 1,1,3
-        //.??..??...?##. 1,1,3
-        //?#?#?#?#?#?#?#? 1,3,1,6
-        //????.#...#... 4,1,1
-        //????.######..#####. 1,6,5
-        //?###???????? 3,2,1"
-        //            .to_string();
-        //
-        input
-            .par_lines()
-            .map(|l| {
-                let (springs, counts) = l.split_once(' ').unwrap();
-                let counts: Vec<i32> = counts.split(',').map(|c| c.parse().unwrap()).collect();
+        for line in input.lines() {
+            
 
-                calculate_combos(springs, &counts)
-            })
-            .sum()
+        }
+        0
     }
 
     fn part_two(&self) -> Self::ReturnType {
         let input = self.get_input();
-        //        let input = "???.### 1,1,3
-        //.??..??...?##. 1,1,3
-        //?#?#?#?#?#?#?#? 1,3,1,6
-        //????.#...#... 4,1,1
-        //????.######..#####. 1,6,5
-        //?###???????? 3,2,1"
-        //            .to_string();
-        //
-        input
-            .par_lines()
-            .map(|l| {
-                let (springs, counts) = l.split_once(' ').unwrap();
-                let counts = counts.split(',').map(|c| c.parse().unwrap());
-
-                let counts = counts
-                    .clone()
-                    .chain(counts.clone())
-                    .chain(counts.clone())
-                    .chain(counts.clone())
-                    .chain(counts.clone())
-                    .collect();
-
-                let springs: String = springs
-                    .chars()
-                    .chain(springs.chars())
-                    .chain(springs.chars())
-                    .chain(springs.chars())
-                    .chain(springs.chars())
-                    .collect();
-
-                calculate_combos(&springs, &counts)
-            })
-            .sum()
+        
+        0
     }
 }
