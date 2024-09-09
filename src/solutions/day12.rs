@@ -1,9 +1,7 @@
+use itertools::Itertools;
+
 use crate::solutions::day12::SpringStatus::{Broken, Operational, Unknown};
 use crate::solutions::Solution;
-use itertools::Itertools;
-use rayon::iter::ParallelIterator;
-use rayon::str::ParallelString;
-use std::borrow::Borrow;
 
 pub(crate) struct Day12;
 
@@ -31,85 +29,53 @@ impl TryFrom<char> for SpringStatus {
     }
 }
 
-fn line_matches_counts(status_line: &str, broken_counts: &Vec<i32>) -> bool {
-    let broken_line = status_line
-        .chars()
-        .dedup_with_count()
-        .filter(|(_count, character)| *character == BROKEN_CHAR)
-        .collect_vec();
-    broken_counts.len() == broken_line.len()
-        && broken_line
-            .into_iter()
-            .zip(broken_counts)
-            .all(|((count, _character), broken_count)| *broken_count as usize == count)
+fn expanded_line(line: &str) -> String {
+    line.chars()
+        .chain(line.chars())
+        .chain(line.chars())
+        .chain(line.chars())
+        .chain(line.chars())
+        .collect()
 }
 
-fn calculate_combos<'a>(status_line: &'a str, broken_counts: &Vec<i32>) -> i32 {
-    let first = status_line;
-
-    // if there are any unknowns
-    if first.chars().any(|c| c == UNKNOWN_CHAR) {
-        let (unknown_index, _) = first.chars().find_position(|c| *c == UNKNOWN_CHAR).unwrap();
-
-        let mut line = first.to_string();
-        line.replace_range(
-            unknown_index..(unknown_index + 1),
-            &OPERATIONAL_CHAR.to_string(),
-        );
-        let mut count = calculate_combos(line.borrow(), broken_counts);
-
-        line.replace_range(unknown_index..(unknown_index + 1), &BROKEN_CHAR.to_string());
-        count += calculate_combos(&line, broken_counts);
-
-        count
-    } else if line_matches_counts(first, broken_counts) {
-        // otherwise there are no unknowns, so lets just check if its valid
-        1
-    } else {
-        // otherwise its not valid
-        0
-    }
-}
-
-fn divide_and_conquerer(line: &str, index: usize, broken_counts: &Vec<i32>) -> i32 {
-    // base case :
-    // "." returns 0
-    // "#" returns 1
-    //
-    // recurisve cases:
-    // if the new char is "."
-    //      return the count of the rest of the string
-    // if the new char is "#"
-    //      if the second char is "."
-    //          // there is a new group
-    //          return 1 + the rest of the string
-    //      if the second char is "#"
-    //          return the rest of the string
-
-    if index == line.len() - 1 {
-        let current_char = line.as_bytes()[index];
-        if current_char == OPERATIONAL_CHAR as u8 {
-            return 0;
+fn count(cfg: &[u8], nums: &[usize]) -> i32 {
+    if cfg.len() == 0 {
+        if nums.len() == 0 {
+            1
         } else {
-            return 1;
+            0
         }
-    }
-
-    let current_char = line.as_bytes()[index];
-    if current_char == OPERATIONAL_CHAR as u8 {
-        return divide_and_conquerer(line, index + 1, broken_counts);
-    } else if current_char == BROKEN_CHAR as u8 {
-        let second_char = line.as_bytes()[index + 1];
-        if second_char == OPERATIONAL_CHAR as u8 {
-            return 1 + divide_and_conquerer(line, index + 1, broken_counts);
-        } else if second_char == BROKEN_CHAR as u8 {
-            return divide_and_conquerer(line, index + 1, broken_counts);
+    } else if nums.len() == 0 {
+        if cfg.contains(&(BROKEN_CHAR as u8)) {
+            0
         } else {
-            println!("error");
-            return 0;
+            1
         }
     } else {
-        return 0;
+        let len = cfg.len();
+        let mut result = 0;
+        let first_char = cfg[0];
+        if ".?".as_bytes().contains(&first_char) {
+            result += count(&cfg[1..len], nums);
+        }
+
+        if "#?".as_bytes().contains(&first_char) {
+            let first_num = nums[0] as usize;
+            let functional = &(OPERATIONAL_CHAR as u8);
+            let broken = BROKEN_CHAR as u8;
+            if first_num <= len
+                && !cfg[0..first_num].contains(functional)
+                && (first_num == len || cfg[first_num] != broken)
+            {
+                let start_range = usize::min(first_num + 1, len);
+                let new_cfg = &cfg[start_range..len];
+                result += count(&new_cfg, &nums[1..nums.len()]);
+            } else {
+                result += 0;
+            }
+        }
+
+        result
     }
 }
 
@@ -119,16 +85,33 @@ impl Solution for Day12 {
 
     fn part_one(&self) -> Self::ReturnType {
         let input = self.get_input();
-        for line in input.lines() {
-            
-
-        }
-        0
+        input
+            .lines()
+            .map(|line| {
+                let (cfg, nums) = line.split_once(" ").unwrap();
+                let nums = nums.split(',').map(|c| c.parse().unwrap()).collect_vec();
+                count(cfg.as_bytes(), &nums) as i32
+            })
+            .sum()
     }
 
     fn part_two(&self) -> Self::ReturnType {
         let input = self.get_input();
-        
+
+        for line in input.lines() {
+            let (states, counts) = line.split_once(" ").unwrap();
+            let states = expanded_line(states);
+            //println!("states: {:?}", states);
+            //let counts = expanded_line(counts);
+            let states: Vec<SpringStatus> = states.chars().map(|c| c.try_into().unwrap()).collect();
+            let counts: Vec<usize> = counts.split(",").map(|c| c.parse().unwrap()).collect();
+
+            let states = states.iter().dedup_with_count().collect_vec();
+
+            //println!("line: {line}");
+            //println!("counts: {:?}", counts);
+            //println!();
+        }
         0
     }
 }
