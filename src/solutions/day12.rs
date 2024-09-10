@@ -129,7 +129,7 @@ impl Solution for Day12 {
     fn part_one(&self) -> Self::ReturnType {
         let input = self.get_input();
         input
-            .lines()
+            .par_lines()
             .map(|line| {
                 let (cfg, nums) = line.split_once(" ").unwrap();
                 let nums = nums.split(',').map(|c| c.parse().unwrap()).collect_vec();
