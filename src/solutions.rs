@@ -40,6 +40,8 @@ pub(crate) trait Solution {
 
         (d1, d2)
     }
+
+    #[allow(dead_code)]
     fn print_time(&self) {
         let (duration_one, duration_two) = self.time_both();
 
