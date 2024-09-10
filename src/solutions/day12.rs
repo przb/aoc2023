@@ -145,7 +145,7 @@ impl Solution for Day12 {
             .par_lines()
             .map(|line| {
                 let (cfg, nums) = line.split_once(" ").unwrap();
-                let cfg = Vec::from([cfg, cfg, cfg, cfg]).join("?");
+                let cfg = Vec::from([cfg, cfg, cfg, cfg, cfg]).join("?");
                 let nums = Vec::from([nums, nums, nums, nums, nums]).join(",");
                 let nums = nums.split(",").map(|c| c.parse().unwrap()).collect_vec();
                 let mut cache = HashMap::new();
